@@ -1,0 +1,14 @@
+package views
+
+type PeekViewModel struct {
+    Title string
+    Content string
+}
+
+templ Peek(vm PeekViewModel) {
+    <div>
+        <h1>Peeking message</h1>
+        <h2>{vm.Title}</h2>
+        <textarea disabled>{vm.Content}</textarea>
+    </div>
+}
