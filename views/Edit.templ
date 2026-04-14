@@ -1,16 +1,20 @@
 package views
 
 type EditViewModel struct {
-    EditId string
-    PeekId string
-    PeekURL string
-    Title string
-    Content string
+    EditId     string
+    PeekId     string
+    PeekURL    string
+    Title      string
+    Content    string
+    FlashError string
 }
 
 templ Edit(vm *EditViewModel) {
     @Base("Edit Secret: " + vm.Title) {
         <div>
+            if vm.FlashError != "" {
+                <div>{ vm.FlashError }</div>
+            }
             <form action={templ.SafeURL("/edit/" + vm.EditId)} method="post">
                 <h1>Editing secret {vm.Title}</h1>
 

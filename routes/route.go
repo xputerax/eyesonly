@@ -17,6 +17,7 @@ import (
 	"github.com/aimandaniel/eyesonly/utils"
 	"github.com/aimandaniel/eyesonly/views"
 	"github.com/go-chi/chi"
+	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/pbkdf2"
 )
@@ -247,12 +248,30 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 			return
 		}
 
+		var flashError string
+		if cookie, err := r.Cookie("flash_error"); err == nil {
+			if decoded, err := base64.URLEncoding.DecodeString(cookie.Value); err == nil {
+				flashError = string(decoded)
+			}
+			// Clear the flash cookie
+			http.SetCookie(w, &http.Cookie{
+				Name:     "flash_error",
+				Value:    "",
+				Path:     "/",
+				MaxAge:   -1,
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteStrictMode,
+			})
+		}
+
 		component := views.Edit(&views.EditViewModel{
-			EditId:  editId,
-			PeekId:  secret.PeekID,
-			PeekURL: fmt.Sprintf("%s://%s/peek/%s", r.URL.Scheme, r.Host, secret.PeekID),
-			Title:   secret.Title,
-			Content: secret.Content,
+			EditId:     editId,
+			PeekId:     secret.PeekID,
+			PeekURL:    fmt.Sprintf("%s://%s/peek/%s", r.URL.Scheme, r.Host, secret.PeekID),
+			Title:      secret.Title,
+			Content:    secret.Content,
+			FlashError: flashError,
 		})
 
 		templ.Handler(component).ServeHTTP(w, r)
@@ -272,9 +291,36 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 			return
 		}
 
-		// TODO: form validation
 		newTitle := r.Form.Get("title")
 		newContent := r.Form.Get("content")
+
+		data := struct {
+			Title   string
+			Content string
+		}{
+			Title:   newTitle,
+			Content: newContent,
+		}
+
+		validationErrors := validation.ValidateStruct(&data,
+			validation.Field(&data.Title,
+				validation.NotNil, validation.Required, validation.Length(1, 255)),
+			validation.Field(&data.Content,
+				validation.NotNil, validation.Required, validation.Length(1, 255)), // TODO: should probably increase the length in schema
+		)
+		if validationErrors != nil {
+			http.SetCookie(w, &http.Cookie{
+				Name:     "flash_error",
+				Value:    base64.URLEncoding.EncodeToString([]byte(validationErrors.Error())),
+				Path:     "/",
+				MaxAge:   30,
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteStrictMode,
+			})
+			http.Redirect(w, r, "/edit/"+editId, 302)
+			return
+		}
 
 		slog.Info("editing secret",
 			"editId", editId,
