@@ -8,9 +8,10 @@ type PeekViewModel struct {
 templ Peek(vm *PeekViewModel) {
     @Base("Peeking Secret: " + vm.Title) {
         <div>
-            <h1>Peeking message</h1>
-            <h2>{vm.Title}</h2>
-            <textarea disabled>{vm.Content}</textarea>
+            <h1 class="text-xl mb-2">{vm.Title}</h1>
+            <div
+                class="border rounded-xs shadow-xs px-1 py-1/2 w-md h-1/2"
+                disabled>{templ.EscapeString(vm.Content)}</div>
         </div>
     }
 }

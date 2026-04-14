@@ -11,29 +11,44 @@ type EditViewModel struct {
 
 templ Edit(vm *EditViewModel) {
     @Base("Edit Secret: " + vm.Title) {
-        <div>
-            if vm.FlashError != "" {
-                <div>{ vm.FlashError }</div>
-            }
-            <form action={templ.SafeURL("/edit/" + vm.EditId)} method="post">
-                <h1>Editing secret {vm.Title}</h1>
+        <div class="flex flex-row justify-center">
+            <div class="w-md">
+                <form action={templ.SafeURL("/edit/" + vm.EditId)} method="post">
+                    <h1 class="text-xl mb-2">Editing Secret: {vm.Title}</h1>
 
-                <p>
-                    Peek URL: <a href={templ.SafeURL("/peek/" + vm.PeekId)}>{vm.PeekURL}</a>
-                </p>
+                    <div class="mb-2">
+                        Peek URL: <a href={templ.SafeURL("/peek/" + vm.PeekId)}>{vm.PeekURL}</a>
+                    </div>
 
-                <div>
-                    <label>Title</label>
-                    <input type="text" name="title" value={templ.EscapeString(vm.Title)} />
-                </div>
-                <div>
-                    <label>Content</label>
-                    <textarea name="content">{templ.EscapeString(vm.Content)}</textarea>
-                </div>
-                <div>
-                    <input type="submit" value="Save" />
-                </div>
-            </form>
+                    <div class="mb-2 flex flex-col">
+                        <label>Title</label>
+                        <input
+                            class="border rounded-xs shadow-xs px-1 py-1/2"
+                            type="text"
+                            name="title"
+                            value={templ.EscapeString(vm.Title)} />
+                    </div>
+
+                    <div class="mb-2 flex flex-col">
+                        <label>Content</label>
+                        <textarea
+                            class="border rounded-xs shadow-xs px-1 py-1/2"
+                            name="content">{templ.EscapeString(vm.Content)}</textarea>
+                    </div>
+
+                    <div class="mb-2 flex flex-col">
+                        <button type="submit" class="border rounded-xs shadow-xs py-4">
+                        Save
+                        </button>
+                    </div>
+
+                    <div class="mb-2 flex flex-col">
+                    if vm.FlashError != "" {
+                        <p>{ vm.FlashError }</p>
+                    }
+                    </div>
+                </form>
+            </div>
         </div>
     }
 }

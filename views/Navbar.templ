@@ -1,11 +1,14 @@
 package views
 
 templ Navbar() {
-    <div>
-        <ul>
-            <li>Home</li>
-            <li>Nav item 1</li>
-            <li>Nav item 2</li>
-        </ul>
-    </div>
+    <nav class="flex flex-row justify-between mb-2 px-4 py-2">
+        <div class="flex">
+            <a href="/" class="text-2xl">Home</a>
+        </div>
+
+        <div class="flex flex-row gap-2">
+            <a class="text-xl">Nav item 1</a>
+            <a class="text-xl">Nav item 2</a>
+        </div>
+    </nav>
 }

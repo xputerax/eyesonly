@@ -9,7 +9,9 @@ templ Base(title string) {
 
         <body>
         @Navbar()
+        <main class="px-4">
         { children... }
+        </main>
         </body>
     </html>
 }

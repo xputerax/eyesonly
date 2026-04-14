@@ -7,12 +7,17 @@ type PeekConfirmationViewModel struct {
 templ PeekConfirmation(vm *PeekConfirmationViewModel) {
     @Base("Confirm Peek " + vm.PeekId) {
         <div>
-            <h1>Peek at message</h1>
-            <h1>Beware, you can only peek at this message once. It will be deleted upon viewing.</h1>
+            <h1 class="text-xl mb-2">Peek Message</h1>
+            <h2 class="text-lg mb-2 text-red-500">Beware, you can only peek at this message once. It will be deleted upon viewing.</h2>
 
             <form method="post" action={templ.SafeURL("/peek/" + vm.PeekId)}>
                 <div>
-                    <button type="submit" name="peek">Peek</button>
+                    <button
+                        type="submit"
+                        class="border rounded-xs shadow-xs py-2 px-4"
+                        name="peek">
+                        Peek
+                    </button>
                 </div>
             </form>
         </div>
