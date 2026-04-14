@@ -2,16 +2,13 @@ package main
 
 import (
 	"database/sql"
-	"encoding/base64"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 
-	"github.com/a-h/templ"
 	"github.com/aimandaniel/eyesonly/db"
 	"github.com/aimandaniel/eyesonly/routes"
-	"github.com/aimandaniel/eyesonly/views"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	_ "github.com/mattn/go-sqlite3"
@@ -36,31 +33,6 @@ func main() {
 	router.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write([]byte("method not allowed bruh, what are u trying to do?"))
-	})
-
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		var flashError string
-		if cookie, err := r.Cookie("flash_error"); err == nil {
-			if decoded, err := base64.URLEncoding.DecodeString(cookie.Value); err == nil {
-				flashError = string(decoded)
-			}
-			// Clear the flash cookie
-			http.SetCookie(w, &http.Cookie{
-				Name:     "flash_error",
-				Value:    "",
-				Path:     "/",
-				MaxAge:   -1,
-				HttpOnly: true,
-				Secure:   true,
-				SameSite: http.SameSiteStrictMode,
-			})
-		}
-
-		component := views.Home(&views.HomeViewModel{
-			FlashError: flashError,
-		})
-
-		templ.Handler(component).ServeHTTP(w, r)
 	})
 
 	routes.SetupRoutes(router, q)

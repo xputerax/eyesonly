@@ -27,6 +27,31 @@ func SetupRoutes(r *chi.Mux, q *db.Queries) {
 }
 
 func secretsRoute(router *chi.Mux, q *db.Queries) {
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		var flashError string
+		if cookie, err := r.Cookie("flash_error"); err == nil {
+			if decoded, err := base64.URLEncoding.DecodeString(cookie.Value); err == nil {
+				flashError = string(decoded)
+			}
+			// Clear the flash cookie
+			http.SetCookie(w, &http.Cookie{
+				Name:     "flash_error",
+				Value:    "",
+				Path:     "/",
+				MaxAge:   -1,
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteStrictMode,
+			})
+		}
+
+		component := views.Home(&views.HomeViewModel{
+			FlashError: flashError,
+		})
+
+		templ.Handler(component).ServeHTTP(w, r)
+	})
+
 	router.Post("/create", func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			w.Write([]byte(fmt.Sprintf("error parsing form data: %s", err)))
