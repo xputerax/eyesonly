@@ -1,0 +1,14 @@
+package views
+
+templ Base(title string) {
+    <html>
+        <head>
+            <title>{title} - Eyes Only</title>
+        </head>
+
+        <body>
+        @Navbar()
+        { children... }
+        </body>
+    </html>
+}

@@ -20,3 +20,7 @@ UPDATE secrets
 SET title = ?, content = ?
 WHERE edit_id = ?
 RETURNING *;
+
+-- name: DeleteSecretByPeekId :execrows
+DELETE FROM secrets
+WHERE peek_id = ?;

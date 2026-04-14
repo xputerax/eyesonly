@@ -153,7 +153,7 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 		templ.Handler(component).ServeHTTP(w, r)
 	})
 
-	router.Post("/peek/{peekId}/confirm", func(w http.ResponseWriter, r *http.Request) {
+	router.Post("/peek/{peekId}", func(w http.ResponseWriter, r *http.Request) {
 		peekId := chi.URLParam(r, "peekId")
 
 		slog.Info("confirm peek message",
@@ -168,9 +168,72 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 		// TODO: check expiry
 		// TODO: check password
 
+		if _, err := q.DeleteSecretByPeekId(r.Context(), peekId); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(fmt.Sprintf("failed to delete secret: %s", err)))
+			return
+		}
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "flash_title",
+			Value:    base64.URLEncoding.EncodeToString([]byte(secret.Title)),
+			Path:     "/",
+			MaxAge:   30,
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteStrictMode,
+		})
+		http.SetCookie(w, &http.Cookie{
+			Name:     "flash_content",
+			Value:    base64.URLEncoding.EncodeToString([]byte(secret.Content)),
+			Path:     "/",
+			MaxAge:   30,
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteStrictMode,
+		})
+
+		// POST-Redirect-GET (PRG) pattern
+		http.Redirect(w, r, "/peek/"+peekId+"/confirm", http.StatusSeeOther)
+	})
+
+	router.Get("/peek/{peekId}/confirm", func(w http.ResponseWriter, r *http.Request) {
+		titleCookie, err := r.Cookie("flash_title")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(fmt.Sprintf("flash_title cookie not found")))
+			return
+		}
+
+		contentCookie, err := r.Cookie("flash_content")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(fmt.Sprintf("flash_content cookie not found")))
+			return
+		}
+
+		titleBytes, err := base64.URLEncoding.DecodeString(titleCookie.Value)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(fmt.Sprintf("failed to decode flash_title cookie")))
+			return
+		}
+
+		contentBytes, err := base64.URLEncoding.DecodeString(contentCookie.Value)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(fmt.Sprintf("failed to decode flash_content cookie")))
+			return
+		}
+
+		title := string(titleBytes)
+		content := string(contentBytes)
+
+		slog.Info("decoding secrets", "titleBytes", titleBytes, "title", title, "contentBytes", contentBytes, "content", content)
+
 		component := views.Peek(views.PeekViewModel{
-			Title:   secret.Title,
-			Content: secret.Content,
+			Title:   title,
+			Content: content,
 		})
 
 		templ.Handler(component).ServeHTTP(w, r)

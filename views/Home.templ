@@ -1,39 +1,29 @@
 package views
 
-templ Navbar() {
-    <div>
-        <ul>
-            <li>Home</li>
-            <li>Nav item 1</li>
-            <li>Nav item 2</li>
-        </ul>
-    </div>
-}
-
 templ Home() {
-    <div>
-        @Navbar()
-
-        <form method="post" action="/create">
-            <div>
-                <label>title</label>
-                <input type="text" name="title" id="title" />
-            </div>
-            <div>
-                <label>content</label>
-                <textarea name="content"></textarea>
-            </div>
-            <div>
-                <label>expiry</label>
-                <input type="datetime" name="expiry" />
-            </div>
-            <div>
-                <label>password</label>
-                <input type="password" name="password" />
-            </div>
-            <div>
-                <input type="submit" value="Create" />
-            </div>
-        </form>
-    </div>
+    @Base("Home") {
+        <div>
+            <form method="post" action="/create">
+                <div>
+                    <label>title</label>
+                    <input type="text" name="title" id="title" />
+                </div>
+                <div>
+                    <label>content</label>
+                    <textarea name="content"></textarea>
+                </div>
+                <div>
+                    <label>expiry</label>
+                    <input type="datetime" name="expiry" />
+                </div>
+                <div>
+                    <label>password</label>
+                    <input type="password" name="password" />
+                </div>
+                <div>
+                    <input type="submit" value="Create" />
+                </div>
+            </form>
+        </div>
+    }
 }
