@@ -1,8 +1,15 @@
 package views
 
-templ Home() {
+type HomeViewModel struct {
+    FlashError string
+}
+
+templ Home(vm *HomeViewModel) {
     @Base("Home") {
         <div>
+            if vm.FlashError != "" {
+                <div>{ vm.FlashError }</div>
+            }
             <form method="post" action="/create">
                 <div>
                     <label>title</label>

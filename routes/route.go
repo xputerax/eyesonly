@@ -36,15 +36,52 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 		peekId := uuid.NewString()
 		editId := uuid.NewString()
 
-		// TODO: form validation
 		// TODO: encrypt using given password
 		title := r.Form.Get("title")
 		content := r.Form.Get("content")
 		expiry := r.Form.Get("expiry")
 		password := r.Form.Get("password")
 
+		data := struct {
+			Title    string
+			Content  string
+			Expiry   string
+			Password string
+		}{
+			Title:    title,
+			Content:  content,
+			Expiry:   expiry,
+			Password: password,
+		}
+
+		validationErrors := validation.ValidateStruct(&data,
+			validation.Field(&data.Title,
+				validation.Required, validation.NotNil, validation.Length(1, 255), // TODO: max length in schema
+			),
+			validation.Field(&data.Content,
+				validation.Required, validation.NotNil, validation.Length(1, 255), // TODO: max length in schema
+			),
+			validation.Field(&data.Expiry,
+				validation.Date("2006-01-02T15:04"),
+			),
+			validation.Field(&data.Password),
+		)
+		if validationErrors != nil {
+			http.SetCookie(w, &http.Cookie{
+				Name:     "flash_error",
+				Value:    base64.URLEncoding.EncodeToString([]byte(validationErrors.Error())),
+				Path:     "/",
+				MaxAge:   30,
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteStrictMode,
+			})
+			http.Redirect(w, r, "/", 302)
+			return
+		}
+
 		var expireAt sql.NullTime
-		if parsedTime, err := time.Parse("2001-02-03", expiry); err != nil {
+		if parsedTime, err := time.Parse("2006-01-02T15:04", expiry); err != nil {
 			expireAt.Time = parsedTime
 		}
 

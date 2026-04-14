@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -38,7 +39,27 @@ func main() {
 	})
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		component := views.Home()
+		var flashError string
+		if cookie, err := r.Cookie("flash_error"); err == nil {
+			if decoded, err := base64.URLEncoding.DecodeString(cookie.Value); err == nil {
+				flashError = string(decoded)
+			}
+			// Clear the flash cookie
+			http.SetCookie(w, &http.Cookie{
+				Name:     "flash_error",
+				Value:    "",
+				Path:     "/",
+				MaxAge:   -1,
+				HttpOnly: true,
+				Secure:   true,
+				SameSite: http.SameSiteStrictMode,
+			})
+		}
+
+		component := views.Home(&views.HomeViewModel{
+			FlashError: flashError,
+		})
+
 		templ.Handler(component).ServeHTTP(w, r)
 	})
 
