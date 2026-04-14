@@ -122,14 +122,14 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 			return
 		}
 
-		w.Write([]byte("creating secret message"))
-
 		slog.Info("created secret message", "secret", map[string]any{
 			"title":    row.Title,
 			"content":  row.Content,
 			"expiry":   row.ExpireAt,
 			"password": row.Password,
 		})
+
+		http.Redirect(w, r, "/edit/"+editId, 303)
 	})
 
 	router.Get("/peek/{peekId}", func(w http.ResponseWriter, r *http.Request) {
