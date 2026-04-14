@@ -4,15 +4,17 @@ type PeekConfirmationViewModel struct {
     PeekId string
 }
 
-templ PeekConfirmation(vm PeekConfirmationViewModel) {
-    <div>
-        <h1>Peek at message</h1>
-        <h1>Beware, you can only peek at this message once. It will be deleted upon viewing.</h1>
+templ PeekConfirmation(vm *PeekConfirmationViewModel) {
+    @Base("Confirm Peek " + vm.PeekId) {
+        <div>
+            <h1>Peek at message</h1>
+            <h1>Beware, you can only peek at this message once. It will be deleted upon viewing.</h1>
 
-        <form method="post" action={templ.SafeURL("/peek/" + vm.PeekId)}>
-            <div>
-                <button type="submit" name="peek">Peek</button>
-            </div>
-        </form>
-    </div>
+            <form method="post" action={templ.SafeURL("/peek/" + vm.PeekId)}>
+                <div>
+                    <button type="submit" name="peek">Peek</button>
+                </div>
+            </form>
+        </div>
+    }
 }

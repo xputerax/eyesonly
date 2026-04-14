@@ -7,9 +7,10 @@ type EditViewModel struct {
 }
 
 templ Edit(vm *EditViewModel) {
-    <div>
-        <form action={templ.SafeURL("/edit/" + vm.EditId)} method="post">
-            <h1>Editing secret {vm.Title}</h1>
+    @Base("Edit Secret: " + vm.Title) {
+        <div>
+            <form action={templ.SafeURL("/edit/" + vm.EditId)} method="post">
+                <h1>Editing secret {vm.Title}</h1>
 
             <div>
                 <label>Title</label>
@@ -24,5 +25,18 @@ templ Edit(vm *EditViewModel) {
             </div>
         </form>
 
-    </div>
+                <div>
+                    <label>Title</label>
+                    <input type="text" name="title" value={templ.EscapeString(vm.Title)} />
+                </div>
+                <div>
+                    <label>Content</label>
+                    <textarea name="content">{templ.EscapeString(vm.Content)}</textarea>
+                </div>
+                <div>
+                    <input type="submit" value="Save" />
+                </div>
+            </form>
+        </div>
+    }
 }
