@@ -34,7 +34,7 @@ $ templ generate
 5. Build the application
 
 ```
-$ go build cmd/server/server.go -o server
+$ go build -o server cmd/server/server.go
 
 ```
 6. Run the application
