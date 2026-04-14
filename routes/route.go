@@ -146,7 +146,7 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 
 		slog.Info(fmt.Sprintf("found secret = %+v", secret))
 
-		component := views.PeekConfirmation(views.PeekConfirmationViewModel{
+		component := views.PeekConfirmation(&views.PeekConfirmationViewModel{
 			PeekId: peekId,
 		})
 
@@ -231,7 +231,7 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 
 		slog.Info("decoding secrets", "titleBytes", titleBytes, "title", title, "contentBytes", contentBytes, "content", content)
 
-		component := views.Peek(views.PeekViewModel{
+		component := views.Peek(&views.PeekViewModel{
 			Title:   title,
 			Content: content,
 		})
@@ -249,6 +249,8 @@ func secretsRoute(router *chi.Mux, q *db.Queries) {
 
 		component := views.Edit(&views.EditViewModel{
 			EditId:  editId,
+			PeekId:  secret.PeekID,
+			PeekURL: fmt.Sprintf("%s://%s/peek/%s", r.URL.Scheme, r.Host, secret.PeekID),
 			Title:   secret.Title,
 			Content: secret.Content,
 		})
