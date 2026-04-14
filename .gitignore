@@ -70,3 +70,6 @@ views/*_templ.go
 # Built Visual Studio Code Extensions
 *.vsix
 ##
+
+node_modules
+static/assets

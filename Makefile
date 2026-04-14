@@ -6,4 +6,5 @@ SQLC ?= $(HOME)/go/bin/sqlc
 build:
 	$(TEMPL) generate
 	$(SQLC) generate
+	npm run build
 	go build -o server ./cmd/server/server.go

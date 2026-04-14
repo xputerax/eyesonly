@@ -1,0 +1,26 @@
+{
+  "name": "eyesonly",
+  "version": "1.0.0",
+  "description": "1. Install dependencies",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite dev",
+    "preview": "vite preview",
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xputerax/eyesonly.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xputerax/eyesonly/issues"
+  },
+  "homepage": "https://github.com/xputerax/eyesonly#readme",
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "tailwindcss": "^4.2.2"
+  }
+}
