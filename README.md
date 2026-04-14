@@ -31,10 +31,16 @@ $ sqlc generate
 $ templ generate
 ```
 
-5. Run the application
+5. Build the application
 
 ```
-$ go run cmd/server/server.go
+$ go build cmd/server/server.go -o server
+
+```
+6. Run the application
+
+```
+$ ./server
 
 2024/11/18 05:19:11 INFO starting server at :6969
 ```
