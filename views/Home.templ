@@ -9,6 +9,8 @@ templ Home(vm *HomeViewModel) {
         <div class="flex flex-row justify-center">
             <div class="w-md">
                 <form method="post" action="/create">
+                    <h1 class="text-xl mb-2">Create Secret Note</h1>
+
                     <div class="flex flex-col mb-2">
                         <label>Title</label>
                         <input class="border rounded-xs shadow-xs px-1 py-1/2" type="text" name="title" id="title" />
@@ -17,14 +19,14 @@ templ Home(vm *HomeViewModel) {
                         <label>Content</label>
                         <textarea class="border rounded-xs shadow-xs px-1 py-1/2" name="content"></textarea>
                     </div>
-                    <div class="flex flex-col mb-2">
-                        <label>Expiry</label>
-                        <input class="border rounded-xs shadow-xs px-1 py-1/2" type="datetime-local" name="expiry" />
-                    </div>
-                    <div class="flex flex-col mb-2">
-                        <label>Password</label>
-                        <input class="border rounded-xs shadow-xs px-1 py-1/2" type="password" name="password" />
-                    </div>
+                    // <div class="flex flex-col mb-2">
+                    //     <label>Expiry</label>
+                    //     <input class="border rounded-xs shadow-xs px-1 py-1/2" type="datetime-local" name="expiry" />
+                    // </div>
+                    // <div class="flex flex-col mb-2">
+                    //     <label>Password</label>
+                    //     <input class="border rounded-xs shadow-xs px-1 py-1/2" type="password" name="password" />
+                    // </div>
                     <div class="flex flex-col mb-2">
                         <button type="submit" class="border rounded-xs shadow-xs py-4">
                             Create
