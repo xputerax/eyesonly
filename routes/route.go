@@ -23,7 +23,13 @@ import (
 )
 
 func SetupRoutes(r *chi.Mux, q *db.Queries) {
+	assetsRoute(r)
 	secretsRoute(r, q)
+}
+
+func assetsRoute(router *chi.Mux) {
+	router.Handle("/static/*",
+		http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 }
 
 func secretsRoute(router *chi.Mux, q *db.Queries) {
