@@ -11,13 +11,13 @@ import (
 	"github.com/aimandaniel/eyesonly/routes"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 type M map[string]interface{}
 
 func main() {
-	sqliteConn, err := sql.Open("sqlite3", "eyesonly.sqlite3")
+	sqliteConn, err := sql.Open("sqlite", "eyesonly.sqlite3")
 	if err != nil {
 		slog.Error(fmt.Sprintf("failed to open database connection: %s", err))
 		os.Exit(-1)
