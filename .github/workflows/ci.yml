@@ -28,7 +28,7 @@ jobs:
           cache: "npm"
 
       - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@v0.2.793
+        run: go install github.com/a-h/templ/cmd/templ@v0.3.1001
 
       - name: Install sqlc
         run: go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
