@@ -15,7 +15,7 @@ COPY views/ views/
 RUN npm run build
 
 # ========== Stage 2: Compile ==========
-FROM golang:1.23.1-alpine AS compile
+FROM golang:1.26.2-alpine AS compile
 
 # CGO dependencies (required by go-sqlite3)
 RUN apk add --no-cache gcc musl-dev
