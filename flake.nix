@@ -17,11 +17,9 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             go_1_26
-            apple-sdk_15
             gopls
             gotools
             go-tools
-            sqlite
           ] ++ [ act-pkg ];
 
           shellHook = ''

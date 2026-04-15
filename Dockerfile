@@ -17,9 +17,6 @@ RUN npm run build
 # ========== Stage 2: Compile ==========
 FROM golang:1.26.2-alpine AS compile
 
-# CGO dependencies (required by go-sqlite3)
-RUN apk add --no-cache gcc musl-dev
-
 # Install templ and sqlc CLI tools
 RUN go install github.com/a-h/templ/cmd/templ@v0.3.1001 \
  && go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
@@ -36,7 +33,7 @@ COPY . .
 # Generate templ and sqlc code, then build
 RUN templ generate \
  && sqlc generate \
- && CGO_ENABLED=1 go build -o server ./cmd/server/server.go
+ && go build -o server ./cmd/server/server.go
 
 # ========== Stage 3: Run ==========
 FROM alpine:latest

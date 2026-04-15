@@ -46,8 +46,6 @@ jobs:
         run: npm run build
 
       - name: Build Go binary
-        env:
-          CGO_ENABLED: 1
         run: go build -o server ./cmd/server/server.go
 
       - name: Run Go tests
