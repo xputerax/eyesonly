@@ -21,7 +21,7 @@ FROM golang:1.26.2-alpine AS compile
 RUN apk add --no-cache gcc musl-dev
 
 # Install templ and sqlc CLI tools
-RUN go install github.com/a-h/templ/cmd/templ@v0.2.793 \
+RUN go install github.com/a-h/templ/cmd/templ@v0.3.1001 \
  && go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
 WORKDIR /app
